@@ -21,25 +21,26 @@
     <div class="form-control">
       <label>Пароль</label>
       <input type="password" placeholder="Пароль" formControlName="password">
-      <div *ngIf = "form.get('password')?.invalid && form.get('password')?.touched"
-      class="validation" >
 
-        <small *ngIf = "form.get('password')?.errors?.required">
-          Пароль не може бути пустим
-        </small>
-        <small *ngIf = "form.get('password')?.errors?.minlength" >
-          Пароль повинен бути більше {{form.get('password')?.errors?.minlength.requiredLength}}
-        </small>
+      <div *ngIf = "form.get('password')?.invalid && form.get('password')?.touched"
+      class="validation">
+
+          <small *ngIf = "form.get('password')?.errors?.required">
+            Пароль не може бути пустим
+          </small>
+          <small *ngIf = "form.get('password')?.errors?.minlength" >
+            Пароль повинен бути більше {{form.get('password')?.errors?.minlength.requiredLength}}
+          </small>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" formGroupName="address">
       <h2>Адрес</h2>
 
       <div class="form-control">
         <label>Страна</label>
 
-        <select>
+        <select formControlName="country">
           <option value="ru">Россия</option>
           <option value="ua">Украина</option>
           <option value="by">Беларусь</option>
@@ -47,18 +48,19 @@
       </div>
 
       <div class="form-control">
-        <input type="text" placeholder="...">
+        <input type="text" placeholder="..." formControlName="city">
       </div>
 
-      <button class="btn" type = "button" >Выбрать столицу</button>
+      <button class="btn" type = "button" (click)="setCapital()">Выбрать столицу</button>
     </div>
 
-    <div class="card">
+    <div class="card" formGroupName="skills">
       <h2>Ваши навыки</h2>
-      <button class="btn" type = "button">Добавить умение</button>
-      <div class="form-control">
-        <label></label>
-        <input type="text" placeholder="...">
+      <button class="btn" type = "button" (click)="AddSkill()" >Добавить умение</button>
+      <div class="form-control"
+      *ngFor="let c of form.get('skills')?.value; let idx = index">
+        <label>Умение {{idx+1}}</label>
+        <input type="text" placeholder="..." [formControlName] = "idx">
       </div>
     </div>
 
