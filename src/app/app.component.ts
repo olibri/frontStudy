@@ -1,61 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataServices } from './services/data.services';
-import { LocalCounterService } from './services/local-counter.service';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [LocalCounterService]
-})
-export class AppComponent implements OnInit {
-  form: FormGroup
-  constructor(){
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.email, Validators.required]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-      address: new FormGroup({
-        country: new FormControl('ua'),
-        city: new FormControl('', Validators.required)
-      }),
-      skills: new FormArray([])
-    })
+  import { HttpClient } from '@angular/common/http';
+  import { Component, OnInit } from '@angular/core';
+  import {Subject, Subscription} from 'rxjs'
+  // import { DataService } from './services/data.service';
+  import {delay} from 'rxjs/operators'
+  export interface toDo
+  {
+    comp: boolean;
+    title: string;
+    id: number ;
   }
+  @Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+  })
+  export class AppComponent implements OnInit {
 
+    toDos: toDo[] = []
+    todoTitle =''
+    loading = false;
+    constructor(private http: HttpClient){
+
+  }
   ngOnInit(): void {
+  this.fetch()
+
+  }
+  addToDo()
+  {
+    if(!this.todoTitle.trim)
+  {
+    return
+  }
+    const newtodo: toDo={
+    title: this.todoTitle,
+    comp:false,
+      id: 0
   }
 
-  submit(){
-
-    console.log(this.form)
-    const fromData = this.form.value
-    console.log(fromData)
-    this.form.reset();
-  }
-  setCapital(){
-    const cityMap: any={
-      ru: "Moscow",
-      ua:"Kyiv",
-      by: "Minsk"
-    }
-    const cityKey = this.form?.get('address')?.get('country')?.value
-    let city = cityMap[cityKey]
-
-    this.form.patchValue({
-      address:{city}
+  this.http.post<toDo>('https://jsonplaceholder.typicode.com/todos',newtodo)
+      .subscribe(tod=>{
+      console.log(tod)
+      this.toDos.push(tod)
+      this.todoTitle = ''
     })
   }
-  AddSkill(){
-    const control = new FormControl('', Validators.required);
-    // (<FormArray>this.form.get('skills'))
-    (this.form.get('skills')as FormArray).push(control);
+
+  fetch()
+  {
+    this.loading= true;
+
+    this.http.get<toDo[]>('https://jsonplaceholder.typicode.com/todos?_limit=2')
+      .pipe(delay(1000))
+      .subscribe(respons=> {
+        this.toDos = respons
+        this.loading = false;
+      })
   }
+  deleteSome(id:number){
+    this.http.delete('https://jsonplaceholder.typicode.com/todos/${id}')
+    .subscribe(()=>{
+      this.toDos = this.toDos.filter(t=> t.id !== id)
+    })
+  }
+ }
 
 
-  // constructor(public counter : DataServices,
-  //   public localConterServices : LocalCounterService)
-  // {
-
-  // }
-}

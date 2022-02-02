@@ -1,39 +1,12 @@
+p {
+  font-size: 1.5rem;
+}
 
-h1 {
-  animation: flicker 1.5s infinite alternate;
-}
-.container {
-  padding: 2.5rem;
-  border: solid 2px rgb(0, 0, 0);
-  border-radius: 0.8rem;
-  box-shadow:
-    0 0 .1rem rgb(201, 201, 201),
-    0 0 .2rem rgb(138, 138, 138),
-    0 0 .3rem #4e4e4e,
-    0 0 .8rem rgb(54, 54, 54),
-    0 0 1rem rgb(37, 37, 37),
-    inset 0 0 1.3rem rgb(0, 0, 0);
-}
-input,
-select,
-textarea {
-  display: block;
-  width: 100%;
-  padding: 0.4rem;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
 
-}
- input.ng-valid.ng-touched  {
-    border: 1px solid rgb(30, 255, 0);
+input.ng-invalid.ng-touched {
+    border: 1px solid red;
   }
 
- input.ng-invalid.ng-touched  {
-  border: 1px solid red;
-}
-
-small
-{
-  color: red;
-}
-
+  input.ng-valid.ng-touched {
+    border: 1px solid green;
+  }
